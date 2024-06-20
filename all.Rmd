@@ -1,0 +1,107 @@
+---
+title: "all benchmarks"
+author: "fearlesscow7688"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+```{r}
+library("benchmarkme")
+```
+
+# `profvis` all benchmarks
+
+```{r}
+timer  <- system.time({
+  my_profile <- profvis::profvis({
+    res = benchmark_std(runs = 3)
+    res_io = benchmark_io(runs = 3)
+    res_io = benchmark_std(runs = 3, cores = 4)
+  })
+})
+
+timer
+```
+
+```{r}
+my_profile
+```
+
+
+
+# `get_sys_details`
+
+```{r sys_info}
+get_sys_details()$sys_info |>
+  tibble::as_tibble(rownames = "detail") |>
+  tidyr::pivot_longer(cols = everything()) |>
+  dplyr::filter(!(name %in% c("login",'user','effective_user'))) |>
+  knitr::kable()
+```
+
+```{r platform_info}
+get_sys_details()$platform_info |>
+  tibble::as_tibble() |>
+  tidyr::pivot_longer(cols = everything()) |>
+  dplyr::mutate(sys_detail = 'platform_info')|>
+  knitr::kable()
+```
+
+```{r r_version}
+get_sys_details()$r_version |>
+  tibble::as_tibble() |>
+  tidyr::pivot_longer(cols = everything()) |>
+  knitr::kable()
+```
+
+```{r ram}
+get_sys_details()$ram |>
+  tibble::as_tibble() |>
+  tidyr::pivot_longer(cols = everything()) |>
+  knitr::kable()
+```
+
+```{r cpu}
+get_sys_details()$cpu |>
+  tibble::as_tibble() |>
+  knitr::kable()
+```
+
+```{r byte_compiler}
+get_sys_details()$byte_compiler |>
+  tibble::as_tibble() |>
+  knitr::kable()    
+```
+
+```{r linear_algebra}
+get_sys_details()$linear_algebra |>
+  tibble::as_tibble() |>
+  knitr::kable()    
+```
+
+```{r installed_packages}
+get_sys_details()$installed_packages |>
+  tibble::as_tibble() |>
+  dplyr::select(Package, Version) |>
+  knitr::kable()    
+```
+
+```{r machine}
+get_sys_details()$machine |> 
+  tibble::as_tibble() |> 
+  tidyr::pivot_longer(cols = everything()) |>
+  knitr::kable()
+```
+
+```{r package_version}
+get_sys_details()$package_version |> 
+  tibble::as_tibble() |>
+  knitr::kable()
+```
+
+
+
+
+
+
+
